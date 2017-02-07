@@ -109,7 +109,9 @@ public class Vertex
      * @return
      */
     private String compileRealWord(String realWord, CoreDictionary.Attribute attribute)
-    {
+    {   
+    	
+//    	System.out.println("realWord:"+realWord+"|"+"attribute:"+attribute);
         if (attribute.nature.length == 1)
         {
             switch (attribute.nature[0])
@@ -151,6 +153,7 @@ public class Vertex
                 case nit:
                 {
                     wordID = CoreDictionary.NT_WORD_ID;
+                    System.out.println("wordID:"+wordID);
                     this.attribute = CoreDictionary.get(CoreDictionary.NT_WORD_ID);
                     return Predefine.TAG_GROUP;
                 }

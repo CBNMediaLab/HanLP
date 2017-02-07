@@ -22,6 +22,7 @@ import com.hankcs.hanlp.seg.common.WordNet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 人名识别
@@ -29,7 +30,7 @@ import java.util.List;
  */
 public class PersonRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static List<Map> Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NR>> roleTagList = roleObserve(pWordSegResult);
         if (HanLP.Config.DEBUG)
@@ -63,9 +64,8 @@ public class PersonRecognition
             sbLog.append(']');
             System.out.printf("人名角色标注：%s\n", sbLog.toString());
         }
-
-        PersonDictionary.parsePattern(nrList, pWordSegResult, wordNetOptimum, wordNetAll);
-        return true;
+        List<Map> cnNameList=PersonDictionary.parsePattern(nrList, pWordSegResult, wordNetOptimum, wordNetAll);
+        return cnNameList;
     }
 
     /**

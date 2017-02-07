@@ -49,6 +49,8 @@ public class PersonDictionary
     public static AhoCorasickDoubleArrayTrie<NRPattern> trie;
 
     public static final CoreDictionary.Attribute ATTRIBUTE = new CoreDictionary.Attribute(Nature.nr, 100);
+    
+    public static List<Map> cnNameList;
 
     static
     {
@@ -68,6 +70,7 @@ public class PersonDictionary
             map.put(pattern.toString(), pattern);
         }
         trie.build(map);
+//        System.out.println(HanLP.Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         logger.info(HanLP.Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
     }
 
@@ -79,9 +82,10 @@ public class PersonDictionary
      * @param wordNetOptimum 待优化的图
      * @param wordNetAll     全词图
      */
-    public static void parsePattern(List<NR> nrList, List<Vertex> vertexList, final WordNet wordNetOptimum, final WordNet wordNetAll)
+    public static List<Map> parsePattern(List<NR> nrList, List<Vertex> vertexList, final WordNet wordNetOptimum, final WordNet wordNetAll)
     {
         // 拆分UV
+        cnNameList=new ArrayList<Map>();
         ListIterator<Vertex> listIterator = vertexList.listIterator();
         StringBuilder sbPattern = new StringBuilder(nrList.size());
         NR preNR = NR.A;
@@ -160,7 +164,8 @@ public class PersonDictionary
         {
             @Override
             public void hit(int begin, int end, NRPattern value)
-            {
+            {    
+            	Map<String,Object> cnNameMap=new HashMap<String,Object>();//识别出的中文人名及其对应的位置信息
 //            logger.trace("匹配到：{}", keyword);
                 StringBuilder sbName = new StringBuilder();
                 for (int i = begin; i < end; ++i)
@@ -191,8 +196,14 @@ public class PersonDictionary
                 }
                 int offset = offsetArray[begin];
                 wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_PEOPLE, name, ATTRIBUTE, WORD_ID), wordNetAll);
+                cnNameMap.put("keyword",name);
+                cnNameMap.put("start",begin-1);
+                cnNameMap.put("end",end-1);
+                cnNameMap.put("nature","nr");
+                cnNameList.add(cnNameMap);
             }
         });
+        return cnNameList;
     }
 
     /**

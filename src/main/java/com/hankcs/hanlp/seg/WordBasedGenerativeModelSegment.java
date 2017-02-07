@@ -429,7 +429,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
     {
         final char[] charArray = wordNetStorage.charArray;
 
-        // 核心词典查询
+        //核心词典查询
         DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(charArray, 0);
         while (searcher.next())
         {
@@ -459,6 +459,56 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                 i = j;
             }
             else i += vertexes[i].getLast().realWord.length();
+        }
+    }
+    
+    /**
+     * 在已经分完词的基础上生成一元词网
+     *
+     * @param wordNetStorage
+     */
+    protected void GenerateWordNetNoSeg(final WordNet wordNetStorage,List<String> strList ,List<List> positionList)
+    {
+        final char[] charArray = wordNetStorage.charArray;
+
+        // 核心词典查询
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(charArray, 0);
+        while (searcher.next())
+        {   
+        	System.out.println(new String(charArray, searcher.begin, searcher.length)+","+searcher.index+","+searcher.value);
+            wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value, searcher.index));
+        }
+        // 用户词典查询
+//        if (config.useCustomDictionary)
+//        {
+//            searcher = CustomDictionary.dat.getSearcher(charArray, 0);
+//            while (searcher.next())
+//            {
+//                wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value));
+//            }
+//        }
+        // 原子分词，保证图连通
+        LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
+        for(LinkedList<Vertex> v:wordNetStorage.getVertexes()){
+        	System.out.println(v);
+        }
+        
+        for (int i = 1; i < vertexes.length;)
+        {
+            if (vertexes[i].isEmpty())
+            {   
+            	if(positionList.contains(i-1)){
+                    wordNetStorage.add(i,new Vertex(strList.get(positionList.indexOf(i-1))));
+                    System.out.println("有");
+            	}else{
+            		System.out.println("无");
+            	}
+                i++;
+            }
+            else {
+            	i += vertexes[i].getLast().realWord.length();
+            };
+            
         }
     }
 

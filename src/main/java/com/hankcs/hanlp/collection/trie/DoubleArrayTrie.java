@@ -59,7 +59,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     protected int check[];
     protected int base[];
 
-    private BitSet used;
+    private BitSet used=new BitSet();
     /**
      * base 和 check 的大小
      */
@@ -171,7 +171,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         if (allocSize <= pos)
             resize(pos + 1);
-
+        
         outer:
         // 此循环体的目标是找出满足base[begin + a1...an]  == 0的n个空闲空间,a1...an是siblings中的n个节点
         while (true)
@@ -191,7 +191,6 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
                 nextCheckPos = pos;
                 first = 1;
             }
-
             begin = pos - siblings.get(0).code; // 当前位置离第一个兄弟节点的距离
             if (allocSize <= (begin + siblings.get(siblings.size() - 1).code))
             {
@@ -203,7 +202,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             if(used.get(begin)){
             	continue;
             }
-
+	            
             for (int i = 1; i < siblings.size(); i++)
                 if (check[begin + siblings.get(i).code] != 0)
                     continue outer;
@@ -380,13 +379,13 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         if (_keySize > _key.size() || _key == null)
             return 0;
 
-        // progress_func_ = progress_func;
+//        progress_func_ = progress_func;
         key = _key;
         length = _length;
         keySize = _keySize;
         value = _value;
         progress = 0;
-
+//        System.out.println("key:"+key.size());
         resize(65536 * 32); // 32个双字节
 
         base[0] = 1;
@@ -398,6 +397,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         root_node.depth = 0;
 
         List<Node> siblings = new ArrayList<Node>();
+        used=new BitSet();
         fetch(root_node, siblings);
         insert(siblings);
 
@@ -1250,7 +1250,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
      * @return 值
      */
     public V get(int index)
-    {
+    {   
         return v[index];
     }
 

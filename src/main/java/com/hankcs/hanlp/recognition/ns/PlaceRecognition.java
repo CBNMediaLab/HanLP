@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * 地址识别
@@ -31,8 +32,9 @@ import java.util.ListIterator;
  */
 public class PlaceRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
-    {
+    public static List<Map> Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    {   
+    	
         List<EnumItem<NS>> roleTagList = roleTag(pWordSegResult, wordNetAll);
         if (HanLP.Config.DEBUG)
         {
@@ -66,8 +68,8 @@ public class PlaceRecognition
             System.out.printf("地名角色标注：%s\n", sbLog.toString());
         }
 
-        PlaceDictionary.parsePattern(NSList, pWordSegResult, wordNetOptimum, wordNetAll);
-        return true;
+        List<Map> locList=PlaceDictionary.parsePattern(NSList, pWordSegResult, wordNetOptimum, wordNetAll);
+        return locList;
     }
 
     public static List<EnumItem<NS>> roleTag(List<Vertex> vertexList, WordNet wordNetAll)

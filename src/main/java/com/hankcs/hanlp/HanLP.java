@@ -53,7 +53,8 @@ public class HanLP
      * 库的全局配置，既可以用代码修改，也可以通过hanlp.properties配置（按照 变量名=值 的形式）
      */
     public static final class Config
-    {
+    {   
+
         /**
          * 开发模式
          */

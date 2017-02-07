@@ -34,19 +34,21 @@ public class NSDictionary extends CommonDictionary<EnumItem<NS>>
 {
     @Override
     protected EnumItem<NS>[] onLoadValue(String path)
-    {
+    {   
+    	
         EnumItem<NS>[] valueArray = loadDat(path + ".value.dat");
         if (valueArray != null)
         {
             return valueArray;
         }
+        
         List<EnumItem<NS>> valueList = new LinkedList<EnumItem<NS>>();
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
-            {
+            {   
                 Map.Entry<String, Map.Entry<String, Integer>[]> args = EnumItem.create(line);
                 EnumItem<NS> NSEnumItem = new EnumItem<NS>();
                 for (Map.Entry<String, Integer> e : args.getValue())
@@ -62,6 +64,7 @@ public class NSDictionary extends CommonDictionary<EnumItem<NS>>
             logger.warning("读取" + path + "失败" + e);
         }
         valueArray = valueList.toArray(new EnumItem[0]);
+        System.out.println(path+" 加载成功  "+valueArray.length+"项词条");
         return valueArray;
     }
 
@@ -72,7 +75,9 @@ public class NSDictionary extends CommonDictionary<EnumItem<NS>>
     }
 
     private EnumItem<NS>[] loadDat(String path)
-    {
+    {   
+        File datFile=new File(path);
+        if(datFile.length()<1000)return null;
         byte[] bytes = IOUtil.readBytes(path);
         if (bytes == null) return null;
         NS[] NSArray = NS.values();

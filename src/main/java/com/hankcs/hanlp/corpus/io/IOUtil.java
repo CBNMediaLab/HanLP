@@ -1,14 +1,4 @@
-/*
- * <summary></summary>
- * <author>He Han</author>
- * <email>hankcs.cn@gmail.com</email>
- * <create-date>2014/9/8 23:04</create-date>
- *
- * <copyright file="Util.java" company="上海林原信息科技有限公司">
- * Copyright (c) 2003-2014, 上海林原信息科技有限公司. All Right Reserved, http://www.linrunsoft.com/
- * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
- * </copyright>
- */
+
 package com.hankcs.hanlp.corpus.io;
 
 
@@ -170,7 +160,7 @@ public class IOUtil
     public static byte[] readBytes(String path)
     {
         try
-        {
+        {   
             if (IOAdapter == null) return readBytesFromFileInputStream(new FileInputStream(path));
 
             InputStream is = IOAdapter.open(path);
@@ -579,6 +569,7 @@ public class IOUtil
     public static void loadDictionary(BufferedReader br, TreeMap<String, CoreDictionary.Attribute> storage) throws IOException
     {
         String line;
+        System.out.println("storage:"+storage);
         while ((line = br.readLine()) != null)
         {
             String param[] = line.split("\\s");

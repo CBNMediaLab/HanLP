@@ -23,8 +23,11 @@ import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
@@ -63,6 +66,7 @@ public class OrganizationDictionary
         dictionary.load(HanLP.Config.OrganizationDictionaryPath);
         logger.info(HanLP.Config.OrganizationDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<NT>(NT.class);
+//        System.out.println("org_dic:::"+HanLP.Config.OrganizationDictionaryPath);
         transformMatrixDictionary.load(HanLP.Config.OrganizationDictionaryTrPath);
         // TODO:什么时候有空了升级到双数组吧
         trie = new Trie().removeOverlaps();
@@ -3737,22 +3741,27 @@ public class OrganizationDictionary
      * @param wordNetOptimum 待优化的图
      * @param wordNetAll
      */
-    public static void parsePattern(List<NT> ntList, List<Vertex> vertexList, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static List<Map> parsePattern(List<NT> ntList, List<Vertex> vertexList, WordNet wordNetOptimum, WordNet wordNetAll)
     {
 //        ListIterator<Vertex> listIterator = vertexList.listIterator();
         StringBuilder sbPattern = new StringBuilder(ntList.size());
+        List<Map> orgList=new ArrayList<Map>();//记录被识别为org的词汇及其位置，在最后独立输出
         for (NT nt : ntList)
         {
             sbPattern.append(nt.toString());
         }
         String pattern = sbPattern.toString();
+//        System.out.println(pattern.length()+"|"+pattern);
         Collection<Emit> emitCollection = trie.parseText(pattern);
+
         Vertex[] wordArray = vertexList.toArray(new Vertex[0]);
         for (Emit emit : emitCollection)
-        {
+        {   
+        	Map<String,Object> orgMap=new HashMap<String,Object>();
             String keyword = emit.getKeyword();
             int start = emit.getStart();
             int end = emit.getEnd();
+            
             StringBuilder sbName = new StringBuilder();
             for (int i = start; i <= end; ++i)
             {
@@ -3761,7 +3770,6 @@ public class OrganizationDictionary
             String name = sbName.toString();
             // 对一些bad case做出调整
             if (isBadCase(name)) continue;
-
             // 正式算它是一个名字
             if (HanLP.Config.DEBUG)
             {
@@ -3772,8 +3780,14 @@ public class OrganizationDictionary
             {
                 offset += wordArray[i].realWord.length();
             }
+            orgMap.put("keyword",name);
+            orgMap.put("start",start-1);
+            orgMap.put("end",end);
+            orgMap.put("nature","nt");
+            orgList.add(orgMap);
             wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_GROUP, name, ATTRIBUTE, WORD_ID), wordNetAll);
         }
+        return orgList;
     }
 
     /**

@@ -77,12 +77,14 @@ public class TranslatedPersonRecognition
                         )
                 {
                     sbName.append(vertex.realWord);
+                    
                     ++appendTimes;
                     activeLine = line;
                 }
             }
 
             line += vertex.realWord.length();
+           
         }
     }
 }

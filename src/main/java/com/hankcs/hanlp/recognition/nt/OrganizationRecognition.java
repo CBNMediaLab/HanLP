@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * 地址识别
@@ -32,7 +33,7 @@ import java.util.ListIterator;
  */
 public class OrganizationRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static List<Map> Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NT>> roleTagList = roleTag(pWordSegResult, wordNetAll);
         if (HanLP.Config.DEBUG)
@@ -50,6 +51,7 @@ public class OrganizationRecognition
             System.out.printf("机构名角色观察：%s\n", sbLog.toString());
         }
         List<NT> NTList = viterbiExCompute(roleTagList);
+
         if (HanLP.Config.DEBUG)
         {
             StringBuilder sbLog = new StringBuilder();
@@ -67,8 +69,9 @@ public class OrganizationRecognition
             System.out.printf("机构名角色标注：%s\n", sbLog.toString());
         }
 
-        OrganizationDictionary.parsePattern(NTList, pWordSegResult, wordNetOptimum, wordNetAll);
-        return true;
+        List<Map> orgList=OrganizationDictionary.parsePattern(NTList, pWordSegResult, wordNetOptimum, wordNetAll);
+
+        return orgList;
     }
 
     public static List<EnumItem<NT>> roleTag(List<Vertex> vertexList, WordNet wordNetAll)
@@ -86,6 +89,7 @@ public class OrganizationRecognition
                     if (vertex.getAttribute().totalFrequency <= 1000)
                     {
                         tagList.add(new EnumItem<NT>(NT.F, 1000));
+                        System.out.println("K");
                     }
                     else break;
                 }
@@ -97,12 +101,14 @@ public class OrganizationRecognition
                 {
                     EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.K, 1000);
                     ntEnumItem.addLabel(NT.D, 1000);
+                    System.out.println("D");
                     tagList.add(ntEnumItem);
                 }
                 continue;
                 case m:
                 {
                     EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.M, 1000);
+                    System.out.println("M");
                     tagList.add(ntEnumItem);
                 }
                 continue;
@@ -115,7 +121,10 @@ public class OrganizationRecognition
             }
             tagList.add(NTEnumItem);
 //            line += vertex.realWord.length();
+           
+
         }
+
         return tagList;
     }
 

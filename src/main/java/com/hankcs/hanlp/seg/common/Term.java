@@ -11,6 +11,9 @@
  */
 package com.hankcs.hanlp.seg.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.LexiconUtility;
@@ -30,6 +33,16 @@ public class Term
      * 词性
      */
     public Nature nature;
+    
+    /**
+     * 多重词性列表
+     */
+     public List<String> natureList;
+     
+    /**
+     * 实体标识的中间层
+     */
+     public String nerPos; 
 
     /**
      * 在文本中的起始位置（需开启分词器的offset选项）
@@ -42,9 +55,12 @@ public class Term
      * @param nature 词性
      */
     public Term(String word, Nature nature)
-    {
+    {   
+    	List<String> natureList=new ArrayList<String>();
         this.word = word;
         this.nature = nature;
+        natureList.add(nature.toString());
+        this.natureList=natureList;
     }
 
     @Override

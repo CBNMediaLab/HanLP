@@ -34,7 +34,8 @@ public class NTDictionary extends CommonDictionary<EnumItem<NT>>
 {
     @Override
     protected EnumItem<NT>[] onLoadValue(String path)
-    {
+    {   
+    	
         EnumItem<NT>[] valueArray = loadDat(path + ".value.dat");
         if (valueArray != null)
         {
@@ -72,7 +73,9 @@ public class NTDictionary extends CommonDictionary<EnumItem<NT>>
     }
 
     private EnumItem<NT>[] loadDat(String path)
-    {
+    {   
+    	File datFile=new File(path);
+    	if(datFile.length()<1000)return null;
         byte[] bytes = IOUtil.readBytes(path);
         if (bytes == null) return null;
         NT[] values = NT.values();

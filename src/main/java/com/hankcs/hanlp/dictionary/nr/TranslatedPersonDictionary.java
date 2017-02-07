@@ -40,7 +40,7 @@ public class TranslatedPersonDictionary
         {
             throw new IllegalArgumentException("音译人名词典" + path + "加载失败");
         }
-
+        System.out.println("音译人名词典" + path + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         logger.info("音译人名词典" + path + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
     }
 

@@ -35,11 +35,11 @@ public class Config
     /**
      * 是否识别地名
      */
-    public boolean placeRecognize = false;
+    public boolean placeRecognize = true;
     /**
      * 是否识别机构
      */
-    public boolean organizationRecognize = false;
+    public boolean organizationRecognize = true;
     /**
      * 是否加载用户词典
      */
@@ -47,7 +47,7 @@ public class Config
     /**
      * 词性标注
      */
-    public boolean speechTagging = false;
+    public boolean speechTagging = true;
     /**
      * 命名实体识别是否至少有一项被激活
      */
